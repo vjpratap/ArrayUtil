@@ -39,3 +39,14 @@ arrayUtil resize(arrayUtil *array, int length){
 	array->typeSize = typeSize;
 	return *array;
 }
+
+int findIndex(arrayUtil *array, void * element){
+	int i;
+	int *arrayPtr = (int *)(array->base);
+	int *elementPtr = (int *)(element);
+	for (i = 0; i < array->length; ++i){
+		if(arrayPtr[i] == *elementPtr)
+			return i;
+	}
+	return -1;
+}
