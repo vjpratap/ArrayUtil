@@ -1,4 +1,4 @@
-typedef struct array arrayUtil;
+typedef struct array ArrayUtil;
 
 struct array {
 	void *base;
@@ -6,7 +6,7 @@ struct array {
 	int length;
 };
 
-int areEqual(arrayUtil *, arrayUtil *);
-arrayUtil create(int , int);
-arrayUtil resize(arrayUtil *, int);
-int findIndex(arrayUtil *, void *);
+int areEqual(ArrayUtil , ArrayUtil );
+ArrayUtil create(int , int);
+ArrayUtil resize(ArrayUtil , int);
+int findIndex(ArrayUtil , void *);
