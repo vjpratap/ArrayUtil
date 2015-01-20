@@ -7,3 +7,5 @@ struct array {
 };
 
 int areEqual(arrayUtil *, arrayUtil *);
+arrayUtil create(int , int);
+arrayUtil resize(arrayUtil *, int);

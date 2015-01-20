@@ -146,10 +146,50 @@ test_that_should_give_1_when_type_of_arrays_are_not_equal(){
 	assertEqual(areEqual(&array1, &array2),0);
 }
 
-// test_that_function_creates_new_array_or_not(){
-// 	arrayUtil array = create()
+test_that_function_creates_new_array_or_not(){
+	arrayUtil array = create(4,3);
+	int *createArray  = (int*)array.base;
+	assertEqual(createArray[0], 0);
+	assertEqual(createArray[2], 0);
+	assertEqual(array.length, 3);
+	assertEqual(array.typeSize, 4);
+}
 
-// }
+test_that_function_extends_the_given_array_size(){
+	int array[] = {1,2,3,4,5};
+	arrayUtil util,resultArray;
+	int *resizeArray;
+	util.base = array;
+	util.typeSize = 4;
+	util.length = 5;
+
+	resultArray = resize(&util, 7);
+	resizeArray = resultArray.base;
+	assertEqual(resizeArray[0], 1);
+	assertEqual(resizeArray[4], 5);
+	assertEqual(resizeArray[5], 0);
+	assertEqual(resizeArray[6], 0);
+	assertEqual(resultArray.length, 7);
+	assertEqual(resultArray.typeSize, 4);
+}
+
+test_that_function_reduce_the_given_array_size(){
+	int array[] = {1,2,3,4,5};
+	arrayUtil util,resultArray;
+	int *resizeArray;
+	util.base = array;
+	util.typeSize = 4;
+	util.length = 5;
+
+	resultArray = resize(&util, 3);
+	resizeArray = resultArray.base;
+	assertEqual(resizeArray[0], 1);
+	assertEqual(resizeArray[2], 3);
+	assertEqual(resultArray.length, 3);
+	assertEqual(resultArray.typeSize, 4);
+}
+
+
 
 
 

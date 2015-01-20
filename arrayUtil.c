@@ -12,7 +12,30 @@ int areEqual(arrayUtil *array1, arrayUtil *array2){
 	for (i = 0; i < biggerLength; i++){
 		if(array1Ptr[i] != array2Ptr[i])
 			return 0;
-		printf("%d                 %d\n", array1Ptr[i] ,array2Ptr[i]);
 	}
 	return 1;
+}
+
+arrayUtil create(int typeSize, int length){
+	arrayUtil array;
+	void *base = calloc(length, typeSize);
+	array.base = base;
+	array.typeSize = typeSize;
+	array.length = length;
+	return array;
+}
+
+arrayUtil resize(arrayUtil *array, int length){
+	int i, typeSize, *resultBase;
+	int *arrayPtr = (int *)(array->base);
+	typeSize = sizeof(arrayPtr[0]);
+	resultBase = calloc(length,typeSize);
+	for (i = 0; i < length; ++i){
+		if(i < array->length)
+			resultBase[i] = arrayPtr[i];
+	}
+	array->base = resultBase;
+	array->length = length;
+	array->typeSize = typeSize;
+	return *array;
 }
