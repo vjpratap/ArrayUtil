@@ -4,8 +4,8 @@
 
 int areEqual(ArrayUtil array1, ArrayUtil array2){
 	int i,biggerLength;
-	char *array1Ptr = (char *)(array1.base);
-	char *array2Ptr = (char *)(array2.base);
+	basePtr array1Ptr = (basePtr)array1.base;
+	basePtr array2Ptr = (basePtr)array2.base;
 	if(array1.length != array2.length || array1.typeSize != array2.typeSize)
 		return 0;
 	for (i = 0; i < array1.length*array1.typeSize; i++){
@@ -21,23 +21,27 @@ ArrayUtil create(int typeSize, int length){
 }
 
 ArrayUtil resize(ArrayUtil array,int length){
-	int i,totalBytes=array.length*array.typeSize;
-	int newIndex = (length-array.length)*array.typeSize;
-	array.base = realloc(array.base,length*array.typeSize);
-	for(i = 0;i < totalBytes; i++)
-		((char *)array.base)[i+newIndex] = 0;
+	void *base;
+	int shortLength = length <= array.length?length:array.length;
+	int longLength = length>=array.length?length:array.length;
+	base = calloc(longLength,array.typeSize);
+	memcpy(base,array.base,shortLength * array.typeSize);
+	array.base=base;
 	array.length = length;
 	return array;
 };
 
 int findIndex(ArrayUtil array, void * element){
-	int i = 0,totalBytes = array.length*array.typeSize;
-	char *arrayPtr = (char *)array.base;
-	char *elePtr = (char *)element;
-	while(i < totalBytes){
-		if(arrayPtr[i] == *elePtr)
+	int i = 0,j = 0,totalBytes = array.length*array.typeSize;
+	basePtr arrayPtr = (basePtr)array.base;
+	basePtr elePtr = (basePtr)element;
+	for (i = 0; i < totalBytes; i++){
+		if(arrayPtr[i] != elePtr[j])
+			j = 0;
+		if(arrayPtr[i] == elePtr[j])
+			j = j + 1;
+		if(j == array.typeSize)
 			return i/array.typeSize;
-		i = i + array.typeSize;
 	}
 	return -1;
 }
@@ -48,31 +52,15 @@ void dispose(ArrayUtil array){
 	array.typeSize = 0;
 }
 
+void* findFirst(ArrayUtil util, MatchFunc* match, void* hint){
+	int i;
+	basePtr array = (basePtr)util.base;
+	void* element;
+	for(i=0;i<util.length;i++){
+		element = &(array[i*util.typeSize]);;
+		if(match(hint, element))
+			return element;
+	}
+	return NULL;
+}
 
-	// int i, *resultBase, lengthDiff,typeSize;
-	// char *arrayPtr = (char *)(array.base);
-	// lengthDiff = length - array.length;
-	// typeSize = array.typeSize;
-	// resultBase = realloc(array.base,typeSize*lengthDiff);
-	// for (i = 0; i < lengthDiff; ++i){
-	// 	if(i < array.length)
-	// 		resultBase[i+array.length] = 0;
-	// }
-	// array.base = resultBase;
-	// array.length = length;
-	// array.typeSize = typeSize;
-	// return array;
-
-
-	// int i, typeSize, *resultBase;
-	// int *arrayPtr = (int *)(array.base);
-	// typeSize = sizeof(arrayPtr[0]);
-	// resultBase = calloc(length,typeSize);
-	// for (i = 0; i < length; ++i){
-	// 	if(i < array.length)
-	// 		resultBase[i] = arrayPtr[i];
-	// }
-	// array.base = resultBase;
-	// array.length = length;
-	// array.typeSize = typeSize;
-	// return array;
